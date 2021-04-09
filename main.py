@@ -18,6 +18,8 @@ import logging
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+from src.emoji import flag 
+
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -32,8 +34,7 @@ def start(update: Update, _: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
     update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\
-            I am Sirius!',
+        fr'Hi {user.mention_markdown_v2()}',
         reply_markup=ForceReply(selective=True),
     )
 
@@ -47,6 +48,13 @@ def echo(update: Update, _: CallbackContext) -> None:
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
+
+def flags(update: Update, context: CallbackContext) -> None:
+    emoji_flag = context.args[0]
+    img = flag(emoji_flag)
+    path = './tmp/flag.jpg'
+    img.save(path)
+    update.message.reply_photo(photo=open(path, 'rb'))
 
 def main() -> None:
     """Start the bot."""
@@ -62,6 +70,7 @@ def main() -> None:
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("flags", flags))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
