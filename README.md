@@ -1,2 +1,2 @@
-# jarvis
-Jarvis Telegram Bot
+# SIRIUS
+## Hey there! I'm Sirius a Telegram Bot 🤖 
