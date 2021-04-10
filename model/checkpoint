@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/vinicius/Documentos/GitHub/sirius/model/model.tflearn"
+all_model_checkpoint_paths: "/home/vinicius/Documentos/GitHub/sirius/model/model.tflearn"
