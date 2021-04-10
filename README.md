@@ -10,13 +10,16 @@ To start Sirius:
 
 ### 📦 Packages
 To modify this project you will need the following packages:
-* Telegram Bot: 
+
+* python-telegram-bot 
+* Pillow
+* numpy
+* nltk
+* tensorflow
+* tflearn
+
 ```console
-$ pip install python-telegram-bot
+$ pip install <package_name>
 ```
 
-* Pillow:
-
-```console
-$ pip install Pillow
-```
+![sirius](sirius.jpg)
