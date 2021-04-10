@@ -1,9 +1,10 @@
 import nltk
+nltk.download('punkt')
 from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 
 import numpy as np
-import tflearn
+import tflearn as tfl
 import tensorflow as tf
 import random
 import json
@@ -20,13 +21,13 @@ for intent in data['intents']:
     for pattern in intent['patterns']:
         words = nltk.word_tokenize(pattern)
         phrases.extend(words)
-        docs_x.append(pattern)
+        docs_x.append(words)
         docs_y.append(intent['tag'])
 
         if intent['tag'] not in labels:
             labels.append(intent['tag'])
 
-phrases = [stemmer.stem(w.lower()) for w in phrases]
+phrases = [stemmer.stem(w.lower()) for w in phrases if  w not in '?']
 phrases = sorted(list(set(phrases)))
 
 labels = sorted(labels)
@@ -54,3 +55,15 @@ for x, doc in enumerate(docs_x):
 
 training = np.array(training)
 output = np.array(output)
+
+tf.compat.v1.reset_default_graph()
+
+net = tfl.input_data(shape=[None, len(training[0])])
+net = tfl.fully_connected(net, 8)
+net = tfl.fully_connected(net, 8)
+net = tfl.fully_connected(net, len(output[0]), activation='softmax')
+net = tfl.regression(net)
+
+model = tfl.DNN(net)
+model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
+model.save('./output/model.tflearn')
