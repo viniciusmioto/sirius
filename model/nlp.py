@@ -9,7 +9,7 @@ from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 
 
-with open("intents.json") as file:
+with open("model/intents.json") as file:
     data = json.load(file)
 
 try:
@@ -74,13 +74,13 @@ net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
 
-
+"""
 try:
     model.load("model.tflearn")
 except:
     model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
     model.save("model.tflearn")
-
+"""
 
 def bag_of_words(s, words):
     bag = [0 for _ in range(len(words))]
@@ -96,22 +96,20 @@ def bag_of_words(s, words):
     return numpy.array(bag)
 
 
-def chat():
-    print("Start talking with the bot (type quit to stop)!")
+def chat(text):
     while True:
-        inp = input("You: ")
-        if inp.lower() == "quit":
+        if text.lower() == "quit":
             break
 
-        results = model.predict([bag_of_words(inp, words)])
+        results = model.predict([bag_of_words(text, words)])
         results_index = numpy.argmax(results)
         tag = labels[results_index]
+
+        print('\n\n\n\n', text)
 
         for tg in data["intents"]:
             if tg['tag'] == tag:
                 responses = tg['responses']
 
-        print(random.choice(responses))
+        return str(random.choice(responses))
 
-
-chat()

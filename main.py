@@ -19,6 +19,7 @@ from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 from src.emoji import flag 
+from model.nlp import *
 
 # Enable logging
 logging.basicConfig(
@@ -37,7 +38,7 @@ def start(update: Update, _: CallbackContext) -> None:
         fr'Hi {user.mention_markdown_v2()}\!',
         reply_markup=ForceReply(selective=True),
     )
-    update.message.reply_text("I am Sirius, an Artificial Intelligence bot assistant")
+    update.message.reply_text("How are you?")
 
 def help_command(update: Update, _: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
@@ -46,7 +47,7 @@ def help_command(update: Update, _: CallbackContext) -> None:
 
 def echo(update: Update, _: CallbackContext) -> None:
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    update.message.reply_text(chat(update.message.text))
 
 
 def flags(update: Update, context: CallbackContext) -> None:
@@ -71,6 +72,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("flags", flags))
+    dispatcher.add_handler(CommandHandler("talk", talk))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
