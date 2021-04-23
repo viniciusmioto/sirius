@@ -105,8 +105,6 @@ def chat(text):
         results_index = numpy.argmax(results)
         tag = labels[results_index]
 
-        print('\n\n\n\n', text)
-
         for tg in data["intents"]:
             if tg['tag'] == tag:
                 responses = tg['responses']
